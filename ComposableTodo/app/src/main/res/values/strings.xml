@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Composable ToDo</string>
+    <string name="title_activity_splash_screen">SplashScreenActivity</string>
+    <string name="back">Back</string>
+    <string name="task_name">Task name</string>
+    <string name="save">Save</string>
+    <string name="title_activity_app_intro">Welcome</string>
+    <string name="map">Map</string>
+    <string name="save_location">Save location</string>
+    <string name="add_task">Add task</string>
+    <string name="edit_task">Edit task</string>
+    <string name="marker_help">Hold your finger on Marker to move it</string>
+    <string name="date">Date</string>
+    <string name="location">Location</string>
+    <string name="required_field">Required field</string>
+    <string name="welcome_to">Welcome to </string>
+    <string name="intro_text_1">This is the best app for any todo enthusiast.</string>
+    <string name="intro_text_2">The app is written using Compose. Enjoy!!!!!!!</string>
+    <string name="compose">Jetpack Compose</string>
+    <string name="clear">clear</string>
+    <string name="no_tasks_text">You have no tasks. Add them using the plus button</string>
+    <string name="continue_to_app">Continue</string>
+</resources>
