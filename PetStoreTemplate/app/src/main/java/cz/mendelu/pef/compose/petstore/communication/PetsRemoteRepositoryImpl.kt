@@ -5,6 +5,7 @@ import cz.mendelu.pef.compose.petstore.architecture.CommunicationResult
 import cz.mendelu.pef.compose.petstore.models.Pet
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.ResponseBody
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
@@ -43,4 +44,18 @@ class PetsRemoteRepositoryImpl(private val petsAPI: PetsAPI) : IPetsRemoteReposi
             return CommunicationResult.Exception(unknownHostEx)
         }
     }
+
+    override suspend fun deletePet(id: Long): CommunicationResult<ResponseBody> {
+        return try {
+            processResponse(withContext(Dispatchers.IO){petsAPI.deletePet(id)})
+
+        }catch (timeoutException: SocketTimeoutException){
+            return CommunicationResult.Exception(timeoutException)
+
+        }catch (unknownHostEx: UnknownHostException){
+            return CommunicationResult.Exception(unknownHostEx)
+        }
+    }
+
+
 }

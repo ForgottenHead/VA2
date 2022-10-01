@@ -5,4 +5,5 @@
     <string name="back">Back</string>
     <string name="pet_detail">Pet detail</string>
     <string name="failed">Failed to load the list.</string>
+    <string name="not_removed">Failed to remove.</string>
 </resources>

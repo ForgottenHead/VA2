@@ -2,26 +2,30 @@ package cz.mendelu.pef.compose.petstore.ui.screens
 
 import android.annotation.SuppressLint
 import android.widget.Space
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.TopAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ViewModel
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import cz.mendelu.pef.compose.petstore.R
 import cz.mendelu.pef.compose.petstore.constants.Constants
 import cz.mendelu.pef.compose.petstore.extensions.getValue
@@ -31,6 +35,7 @@ import cz.mendelu.pef.compose.petstore.models.ScreenState
 import cz.mendelu.pef.compose.petstore.navigation.INavigationRouter
 import cz.mendelu.pef.compose.petstore.ui.elements.ErrorScreen
 import cz.mendelu.pef.compose.petstore.ui.elements.LoadingScreen
+import cz.mendelu.pef.compose.petstore.ui.theme.Pink80
 import org.koin.androidx.compose.getViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -88,7 +93,8 @@ fun ListOfPetsScreen(navigation: INavigationRouter,
             PetsListScreenContent(
                 screenState = screenState.value,
                 paddingValues = it,
-                navigation = navigation
+                navigation = navigation,
+                viewModel = viewModel
             )
         },
     )
@@ -96,13 +102,17 @@ fun ListOfPetsScreen(navigation: INavigationRouter,
 
 @Composable
 fun PetsListScreenContent(
+    viewModel: ListOfPetsViewModelViewModel,
     screenState: ScreenState<List<Pet>>,
     paddingValues: PaddingValues,
     navigation: INavigationRouter){
 
     screenState.let {
         when(it){
-            is ScreenState.DataLoaded -> PetsList(paddingValues = paddingValues, navigation = navigation, pets = it.data )
+            is ScreenState.DataLoaded -> PetsList(paddingValues = paddingValues,
+                navigation = navigation,
+                pets = it.data,
+                viewModel = viewModel)
             is ScreenState.Error -> ErrorScreen(text = stringResource(id = it.error))
             is ScreenState.Loading -> LoadingScreen()
         }
@@ -112,35 +122,66 @@ fun PetsListScreenContent(
 @Composable
 fun PetsList(paddingValues: PaddingValues,
              navigation: INavigationRouter,
-             pets: List<Pet>){
-    LazyColumn(modifier = Modifier.padding(paddingValues)) {
-        pets.forEach {
-            item(key = it.id) {
-                PetRow(
-                    pet = it,
-                    onRowClick = {
-                        navigation.navigateToPetDetail(it.id)
-                    }
-                )
+             pets: List<Pet>,
+             viewModel: ListOfPetsViewModelViewModel){
+
+    val refreshing = rememberSaveable { mutableStateOf(false) }
+
+    SwipeRefresh(state = rememberSwipeRefreshState(isRefreshing = refreshing.value), onRefresh = {viewModel.loadPets()}) {
+
+        LazyColumn(modifier = Modifier.padding(paddingValues)) {
+            pets.forEach {
+                item(key = it.id) {
+                    PetRow(
+                        pet = it,
+                        onRowClick = {
+                            navigation.navigateToPetDetail(it.id)
+                        }
+                    )
+                }
             }
         }
+
     }
+
 }
 
 @Composable
 fun PetRow(pet: Pet,
            onRowClick: () -> Unit){
+
+
     Row(verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
             .padding(end = 16.dp)
-            .clickable(onClick = onRowClick)) {
+            .padding(bottom = 10.dp)
+            .clickable(onClick = onRowClick)
+    ) {
 
-        Column {
-            Text(
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-                text = pet.name?:"")
+            RowComponent(pet = pet)
+        
+
+
+    }
+}
+
+@Composable
+fun RowComponent(pet:Pet) {
+    Surface(
+        shape = RoundedCornerShape(40),
+        color = Pink80,
+        modifier = Modifier.padding(start = 20.dp, end = 20.dp)
+            .fillMaxWidth()
+            .height(60.dp)
+                ) {
+            Column(verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    text = pet.name?:"")
         }
     }
 }
