@@ -3,6 +3,8 @@ package cz.mendelu.pef.compose.petstore.ui.screens
 import android.annotation.SuppressLint
 import android.widget.Space
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,6 +19,7 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -36,6 +39,9 @@ import cz.mendelu.pef.compose.petstore.navigation.INavigationRouter
 import cz.mendelu.pef.compose.petstore.ui.elements.ErrorScreen
 import cz.mendelu.pef.compose.petstore.ui.elements.LoadingScreen
 import cz.mendelu.pef.compose.petstore.ui.theme.Pink80
+import cz.mendelu.pef.compose.petstore.ui.theme.Purple40
+import cz.mendelu.pef.compose.petstore.ui.theme.PurpleGrey40
+import cz.mendelu.pef.compose.petstore.ui.theme.PurpleGrey80
 import org.koin.androidx.compose.getViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -77,16 +83,20 @@ fun ListOfPetsScreen(navigation: INavigationRouter,
                     ) {
                         Text(
                             text = stringResource(id = R.string.app_name),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = Color.Black,
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = Color.White,
                             modifier = Modifier
-                                .padding(start = 0.dp)
-                                .weight(1.5f)
+                                .padding(start = 0.dp, end = 5.dp)
+                                //.weight(1.5f)
                         )
+
+                        Icon(painter = painterResource(id = R.drawable.ic_pet_cat),
+                            tint = Color.White,
+                            contentDescription = "icon?")
                     }
                 },
                 elevation = 0.dp,
-                backgroundColor = MaterialTheme.colorScheme.background
+                backgroundColor = MaterialTheme.colorScheme.primary
             )
         },
         content = {
@@ -171,17 +181,29 @@ fun RowComponent(pet:Pet) {
     Surface(
         shape = RoundedCornerShape(40),
         color = Pink80,
-        modifier = Modifier.padding(start = 20.dp, end = 20.dp)
+        modifier = Modifier
+            .padding(start = 20.dp, end = 20.dp, top = 10.dp)
             .fillMaxWidth()
             .height(60.dp)
+            .border(1.dp, color = PurpleGrey40, shape = RoundedCornerShape(40))
                 ) {
-            Column(verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally) {
+
+               Row(verticalAlignment = CenterVertically,
+                horizontalArrangement = Arrangement.Start) {
+
+                Icon(painter = painterResource(id = R.drawable.ic_paw),
+                    contentDescription = "paw",
+                    modifier = Modifier
+                        .padding(start = 20.dp)
+                        .width(40.dp)
+                        .height(40.dp))
+                
                 Text(
                     fontWeight = FontWeight.Bold,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
-                    text = pet.name?:"")
+                    text = pet.name?:"",
+                    modifier = Modifier.padding(start = 20.dp))
         }
     }
 }

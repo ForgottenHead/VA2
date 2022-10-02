@@ -5,10 +5,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cz.mendelu.pef.compose.petstore.R
@@ -31,14 +34,21 @@ fun BackArrowScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .wrapContentWidth(align = Alignment.CenterHorizontally)
+
                     ) {
                         Text(
                             text = topBarText,
-                            style = MaterialTheme.typography.subtitle2,
-                            color = Color.Black,
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = Color.White,
                             modifier = Modifier
-                                .padding(start = 0.dp)
-                                .weight(1.5f)
+                                .padding(start = 0.dp, end = 5.dp)
+                                //.weight(1.5f)
+                        )
+
+                        androidx.compose.material3.Icon(
+                            painter = painterResource(id = R.drawable.ic_pet_cat),
+                            tint = Color.White,
+                            contentDescription = "icon?"
                         )
                     }
                 },
@@ -48,11 +58,11 @@ fun BackArrowScreen(
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.back),
-                            tint = Color.Black
+                            tint = Color.White
                         )
                     } },
                 elevation = 0.dp,
-                backgroundColor = MaterialTheme.colors.background
+                backgroundColor = androidx.compose.material3.MaterialTheme.colorScheme.primary
             )
         }
     ) {
