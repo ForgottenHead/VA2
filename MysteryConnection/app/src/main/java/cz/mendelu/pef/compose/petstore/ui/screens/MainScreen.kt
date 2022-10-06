@@ -1,6 +1,7 @@
 package cz.mendelu.pef.compose.petstore.ui.screens
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.widget.RelativeLayout
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
@@ -9,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,10 +22,12 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IFillFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.content.ContextCompat
 import cz.mendelu.pef.compose.petstore.R
 import cz.mendelu.pef.compose.petstore.models.Data
+import cz.mendelu.pef.compose.petstore.models.ScreenState
 import cz.mendelu.pef.compose.petstore.navigation.INavigationRouter
+import cz.mendelu.pef.compose.petstore.ui.elements.ErrorScreen
+import cz.mendelu.pef.compose.petstore.ui.elements.LoadingScreen
 import org.koin.androidx.compose.getViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -33,6 +37,25 @@ fun MainScreen(
     navigation: INavigationRouter,
     viewModel: MainScreenViewModel = getViewModel()
 ) {
+    
+    val screenState: MutableState<ScreenState<Data>> = rememberSaveable{
+        mutableStateOf(ScreenState.Loading())
+    }
+    
+    
+    viewModel.mainScreenUIState.value.let { 
+        when(it){
+            is MainScreenUiState.Error -> screenState.value = ScreenState.Error(it.error)
+            is MainScreenUiState.Start -> {
+                LaunchedEffect(it){
+                    viewModel.loadData()
+                }
+            }
+            is MainScreenUiState.Success -> {
+                screenState.value = ScreenState.DataLoaded(it.data)
+            }
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -58,11 +81,32 @@ fun MainScreen(
             )
         },
         content = {
-            // TODO dodělat
+            ScreenContent(screenState = screenState.value)
         },
     )
 }
 
+@Composable
+fun ScreenContent(screenState: ScreenState<Data>) {
+    
+    screenState.let { 
+        when(it){
+            is ScreenState.DataLoaded -> {
+                Log.e("SOmttuu","somtu")
+                content2(data = it.data)
+            }
+            is ScreenState.Error -> ErrorScreen(text = stringResource(it.error))
+            is ScreenState.Loading -> LoadingScreen()
+        }
+    }
+}
+
+
+@Composable
+fun content2(data:Data) {
+    Chart(data = data)
+    
+}
 
 @Composable
 fun Chart(
@@ -106,10 +150,12 @@ fun Chart(
 
                 data.data!!.forEach {
                     // Todo spravte až budete vědět jména proměnných.
-                    //val value = it.value - 100.0f
-                    //if (value > highest) highest = value
-                    //if (value < lowest) lowest = value
-                    //values.add(com.github.mikephil.charting.data.Entry(counter.toFloat(), value))
+                    val value = it.value - 100.0f
+                    //if (value > highest) highest = value.toFloat()
+                    if (value < lowest) lowest = value.toFloat()
+                    values.add(com.github.mikephil.charting.data.Entry(counter.toFloat(),
+                        value.toFloat()
+                    ))
                     counter++
                 }
 
