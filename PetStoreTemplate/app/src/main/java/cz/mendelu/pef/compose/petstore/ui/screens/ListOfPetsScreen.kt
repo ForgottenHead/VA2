@@ -2,10 +2,7 @@ package cz.mendelu.pef.compose.petstore.ui.screens
 
 import android.annotation.SuppressLint
 import android.widget.Space
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -50,9 +48,25 @@ fun ListOfPetsScreen(navigation: INavigationRouter,
                 viewModel: ListOfPetsViewModelViewModel = getViewModel()
 ) {
 
+    val refreshList = navigation.getNavController()
+        .currentBackStackEntry?.savedStateHandle
+        ?.getLiveData<Boolean>(Constants.REFRESH_SCREEN)?.observeAsState()
+
     val screenState: MutableState<ScreenState<List<Pet>>> = rememberSaveable{
         mutableStateOf(ScreenState.Loading())
     }
+
+    refreshList?.value?.let {
+        if (it){
+            LaunchedEffect(it){
+                viewModel.loadPets()
+            }
+        }
+    }
+
+
+
+
 
     viewModel.petsUiState.value.let {
         when(it){
@@ -139,18 +153,26 @@ fun PetsList(paddingValues: PaddingValues,
 
     SwipeRefresh(state = rememberSwipeRefreshState(isRefreshing = refreshing.value), onRefresh = {viewModel.loadPets()}) {
 
-        LazyColumn(modifier = Modifier.padding(paddingValues)) {
-            pets.forEach {
-                item(key = it.id) {
-                    PetRow(
-                        pet = it,
-                        onRowClick = {
-                            navigation.navigateToPetDetail(it.id)
-                        }
-                    )
+        Box() {
+            Image(painter = painterResource(id = R.drawable.ic_background),
+                contentDescription = "background",
+                contentScale = ContentScale.FillHeight)
+
+            LazyColumn(modifier = Modifier.padding(paddingValues)) {
+                pets.forEach {
+                    item(key = it.id) {
+                        PetRow(
+                            pet = it,
+                            onRowClick = {
+                                navigation.navigateToPetDetail(it.id)
+                            }
+                        )
+                    }
                 }
             }
         }
+
+
 
     }
 
@@ -182,10 +204,10 @@ fun RowComponent(pet:Pet) {
         shape = RoundedCornerShape(40),
         color = Pink80,
         modifier = Modifier
-            .padding(start = 20.dp, end = 20.dp, top = 10.dp)
+            .padding(start = 10.dp, end = 15.dp, top = 10.dp)
             .fillMaxWidth()
             .height(60.dp)
-            .border(1.dp, color = PurpleGrey40, shape = RoundedCornerShape(40))
+            .border(3.dp, color = PurpleGrey40, shape = RoundedCornerShape(40))
                 ) {
 
                Row(verticalAlignment = CenterVertically,

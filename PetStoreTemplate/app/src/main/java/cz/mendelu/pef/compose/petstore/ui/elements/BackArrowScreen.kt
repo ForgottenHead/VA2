@@ -1,5 +1,6 @@
 package cz.mendelu.pef.compose.petstore.ui.elements
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
@@ -11,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -67,17 +69,23 @@ fun BackArrowScreen(
         }
     ) {
         if (!drawFullScreenContent) {
-            LazyColumn {
-                item {
-                    Column(
-                        verticalArrangement = Arrangement.Top,
-                        modifier = Modifier
-                            .padding(if (!disablePadding) 16.dp else 0.dp)
-                    ) {
-                        content()
+            Box(){
+                Image(painter = painterResource(id = R.drawable.ic_background),
+                    contentDescription = "background",
+                    contentScale = ContentScale.FillHeight)
+                LazyColumn {
+                    item {
+                        Column(
+                            verticalArrangement = Arrangement.Top,
+                            modifier = Modifier
+                                .padding(if (!disablePadding) 16.dp else 0.dp)
+                        ) {
+                            content()
+                        }
                     }
                 }
             }
+
         } else {
             content()
         }

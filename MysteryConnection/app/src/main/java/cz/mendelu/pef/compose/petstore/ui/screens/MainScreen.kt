@@ -104,6 +104,7 @@ fun ScreenContent(screenState: ScreenState<Data>) {
 
 @Composable
 fun content2(data:Data) {
+    Text(text = "dkdk")
     Chart(data = data)
     
 }
@@ -117,7 +118,7 @@ fun Chart(
         AndroidView(modifier = Modifier
             .fillMaxWidth()
             .height(100.dp)
-            .padding(all = 0.dp),
+            .padding(top = 0.dp),
             factory = { context ->
                 val lineChart = LineChart(context)
                 val params = RelativeLayout.LayoutParams(
