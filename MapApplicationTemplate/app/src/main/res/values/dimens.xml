@@ -1,0 +1,13 @@
+<resources>
+    <dimen name="map_outdoor_marker_width">45dp</dimen>
+    <dimen name="map_outdoor_marker_height">60dp</dimen>
+    <dimen name="marker_card_view">28dp</dimen>
+    <dimen name="marker_card_view_corner">14dp</dimen>
+    <dimen name="marker_card_view_top_margin">4dp</dimen>
+
+    <dimen name="map_outdoor_marker_width_large">60dp</dimen>
+    <dimen name="map_outdoor_marker_height_large">75dp</dimen>
+    <dimen name="marker_card_view_large">38dp</dimen>
+    <dimen name="marker_card_view_corner_large">19dp</dimen>
+    <dimen name="marker_card_view_top_margin_large">4dp</dimen>
+</resources>

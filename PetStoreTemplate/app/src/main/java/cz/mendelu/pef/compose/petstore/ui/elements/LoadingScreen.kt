@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun LoadingScreen(){
@@ -22,4 +23,10 @@ fun LoadingScreen(){
             color = Color.Red,
             strokeWidth = 5.dp)
     }
+}
+
+@Preview
+@Composable
+fun LoadingScreenPreview() {
+    LoadingScreen()
 }

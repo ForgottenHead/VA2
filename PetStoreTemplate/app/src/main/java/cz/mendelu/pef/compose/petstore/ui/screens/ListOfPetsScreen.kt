@@ -224,8 +224,16 @@ fun RowComponent(pet:Pet) {
                     fontWeight = FontWeight.Bold,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
-                    text = pet.name?:"",
+                    text = pet.name,
                     modifier = Modifier.padding(start = 20.dp))
+
+//                   if(pet.photoUrls.isNotEmpty()){
+//                       if(pet.photoUrls[0] != "string"){
+//                           Text("ma photo: ${pet.photoUrls[0]}")
+//                       }
+//
+//                   }
+
         }
     }
 }

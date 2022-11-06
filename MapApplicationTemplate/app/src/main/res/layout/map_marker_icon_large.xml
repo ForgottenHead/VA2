@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="@dimen/map_outdoor_marker_width_large"
+    android:layout_height="@dimen/map_outdoor_marker_height_large"
+    android:background="@android:color/transparent">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="@dimen/marker_card_view_large"
+        android:layout_height="@dimen/marker_card_view_large"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/marker_card_view_top_margin_large"
+        app:cardBackgroundColor="@color/blue"
+        app:cardCornerRadius="@dimen/marker_card_view_corner_large">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/letterText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textAllCaps="true"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                android:textColor="@android:color/white" />
+
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+
+    <ImageView
+        android:id="@+id/marker_background"
+        android:layout_width="@dimen/map_outdoor_marker_width_large"
+        android:layout_height="@dimen/map_outdoor_marker_height_large"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_pin" />
+
+</RelativeLayout>
