@@ -3,6 +3,7 @@ package com.mendelu.xstast12.homework2.communication
 
 import com.mendelu.xstast12.homework2.architecture.CommunicationResult
 import com.mendelu.xstast12.homework2.model.Coordinate
+import com.mendelu.xstast12.homework2.model.Coordinates
 import com.mendelu.xstast12.homework2.model.Store
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -22,7 +23,7 @@ class MockRemoteRepositoryImpl(private val mockAPI: MockAPI):IMockRemoteReposito
         }
     }
 
-    override suspend fun getBrnoBoundaries(): CommunicationResult<List<Coordinate>> {
+    override suspend fun getBrnoBoundaries(): CommunicationResult<Coordinates> {
         return try {
             processResponse(withContext(Dispatchers.IO){mockAPI.getBrnoBoundaries()})
 

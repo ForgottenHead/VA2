@@ -1,5 +1,6 @@
 package com.mendelu.xstast12.homework2.ui.screens
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import com.mendelu.xstast12.homework2.architecture.BaseViewModel
@@ -23,22 +24,25 @@ class MapScreenViewModel(private val remoteRepository: MockRemoteRepositoryImpl)
                 remoteRepository.getStores()
             }
 
+
             when(stores){
-                is CommunicationResult.Error -> mapScreenUiState.value = MapScreenUiState.Error(1)
+                is CommunicationResult.Error -> {
+                    //Log.e("error",stores.error.toString())
+                    mapScreenUiState.value = MapScreenUiState.Error(1)
+                }
                 is CommunicationResult.Exception -> mapScreenUiState.value = MapScreenUiState.Error(2)
                 is CommunicationResult.Success -> {
-//                    val boundaries = withContext(Dispatchers.IO){
-//                        remoteRepository.getBrnoBoundaries()
-//                    }
-//                    when(boundaries){
-//                        is CommunicationResult.Error -> mapScreenUiState.value = MapScreenUiState.Error(3)
-//                        is CommunicationResult.Exception -> mapScreenUiState.value = MapScreenUiState.Error(4)
-//                        is CommunicationResult.Success -> {
-//                            var brno = Brno(stores.data, boundaries.data)
-//                            mapScreenUiState.value = MapScreenUiState.Success(brno)
-//                        }
-//                    }
-                    mapScreenUiState.value = MapScreenUiState.Success(Brno(stores.data))
+                    val boundaries = withContext(Dispatchers.IO){
+                        remoteRepository.getBrnoBoundaries()
+                    }
+                    when(boundaries){
+                        is CommunicationResult.Error -> mapScreenUiState.value = MapScreenUiState.Error(3)
+                        is CommunicationResult.Exception -> mapScreenUiState.value = MapScreenUiState.Error(4)
+                        is CommunicationResult.Success -> {
+                            var brno = Brno(stores.data, boundaries.data)
+                            mapScreenUiState.value = MapScreenUiState.Success(brno)
+                        }
+                    }
 
                 }
             }
