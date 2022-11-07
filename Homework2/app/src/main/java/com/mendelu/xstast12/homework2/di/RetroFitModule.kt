@@ -1,5 +1,6 @@
 package com.mendelu.xstast12.homework2.di
 
+import com.google.android.gms.maps.model.LatLng
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
@@ -59,12 +60,13 @@ class DataDeserializer : JsonDeserializer<Coordinates>{
         val jsonArray = json?.asJsonObject?.getAsJsonArray("coordinates")
 
         if(jsonArray != null){
-            val data: MutableList<Coordinate> = mutableListOf()
+            val data: MutableList<LatLng> = mutableListOf()
             for (array in jsonArray){
                 try {
                     data.add(
-                        Coordinate(array.asJsonArray.get(0).asDouble,
-                            array.asJsonArray.get(1).asDouble))
+                        LatLng(
+                            array.asJsonArray.get(1).asDouble,
+                            array.asJsonArray.get(0).asDouble))
 
                 }catch (exception: java.lang.Exception){
                     exception.printStackTrace()

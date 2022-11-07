@@ -9,18 +9,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.PolygonOptions
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.*
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.algo.GridBasedAlgorithm
 import com.google.maps.android.clustering.algo.NonHierarchicalViewBasedAlgorithm
-import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.MapEffect
-import com.google.maps.android.compose.MapUiSettings
-import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.maps.android.compose.*
 import com.mendelu.xstast12.homework2.map.CustomMapRenderer
 import com.mendelu.xstast12.homework2.model.Brno
 import com.mendelu.xstast12.homework2.model.ScreenState
@@ -75,6 +71,7 @@ fun MapScreenContentSwitcher(screenState: ScreenState<Brno>) {
     }
 }
 
+@OptIn(MapsComposeExperimentalApi::class)
 @Composable
 fun MapScreenContent(brno: Brno) {
     val mapUiSettings by remember { mutableStateOf(
@@ -105,9 +102,10 @@ fun MapScreenContent(brno: Brno) {
             cameraPositionState = cameraPositionState
         ){
 
-
             MapEffect(brno.stores){ map ->
-                //map.addPolygon(PolygonOptions().addAll(brno.boundaries.allCoordinates.))
+                map.addPolygon(
+                    PolygonOptions()
+                    .addAll(brno.boundaries.allCoordinates!!).strokeWidth(5f))
 
 
                 if ( clusterManager == null){
