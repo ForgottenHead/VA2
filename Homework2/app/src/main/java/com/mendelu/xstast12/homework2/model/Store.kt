@@ -24,7 +24,7 @@ class Store(
         return address
     }
 
-    fun getRandom(): String{
-        return type
+    fun getLocation(): LatLng{
+        return LatLng(latitude, longitude)
     }
 }

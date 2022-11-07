@@ -14,14 +14,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.android.gms.common.util.MapUtils
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.*
+import com.google.maps.android.PolyUtil
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.algo.GridBasedAlgorithm
 import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm
 import com.google.maps.android.clustering.algo.NonHierarchicalViewBasedAlgorithm
 import com.google.maps.android.compose.*
+import com.mendelu.xstast12.homework2.R
 import com.mendelu.xstast12.homework2.map.CustomMapRenderer
+import com.mendelu.xstast12.homework2.map.MarkerUtil
 import com.mendelu.xstast12.homework2.model.Brno
 import com.mendelu.xstast12.homework2.model.ScreenState
 import com.mendelu.xstast12.homework2.model.Store
@@ -97,6 +101,15 @@ fun MapScreenContent(brno: Brno) {
     var currentMarker by remember { mutableStateOf<Marker?>(null)}
 
     if (brno.stores!!.isNotEmpty()){
+//        val filtered = mutableListOf<Store>()
+//        for (store in brno.stores!!){
+//            if (PolyUtil.containsLocation(
+//                    store.getLocation(),
+//                    brno.boundaries.allCoordinates, false)){
+//                filtered.add(store)
+//            }
+//        }
+
         clusterManager?.addItems(brno.stores)
         clusterManager?.cluster()
     }
@@ -126,6 +139,8 @@ fun MapScreenContent(brno: Brno) {
 
                     renderer.setOnClusterItemClickListener { item ->
                         if (currentMarker != null){
+                            //TODO - if currentMarker is saved, then clustered and clicked app drop
+                            //TODO- marker is destroyed and new is created
                             currentMarker = null
                         }
 
@@ -135,6 +150,7 @@ fun MapScreenContent(brno: Brno) {
                         )
 
                         currentMarker = clusterRenderer?.getMarker(item)
+                        //currentMarker?.tag = item.id
                         true
                     }
                 }
