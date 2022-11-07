@@ -27,7 +27,6 @@ class MapScreenViewModel(private val remoteRepository: MockRemoteRepositoryImpl)
 
             when(stores){
                 is CommunicationResult.Error -> {
-                    //Log.e("error",stores.error.toString())
                     mapScreenUiState.value = MapScreenUiState.Error(1)
                 }
                 is CommunicationResult.Exception -> mapScreenUiState.value = MapScreenUiState.Error(2)
@@ -39,7 +38,7 @@ class MapScreenViewModel(private val remoteRepository: MockRemoteRepositoryImpl)
                         is CommunicationResult.Error -> mapScreenUiState.value = MapScreenUiState.Error(3)
                         is CommunicationResult.Exception -> mapScreenUiState.value = MapScreenUiState.Error(4)
                         is CommunicationResult.Success -> {
-                            var brno = Brno(stores.data, boundaries.data)
+                            val brno = Brno(stores.data, boundaries.data)
                             mapScreenUiState.value = MapScreenUiState.Success(brno)
                         }
                     }
