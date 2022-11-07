@@ -2,19 +2,23 @@ package com.mendelu.xstast12.homework2.ui.screens
 
 import android.util.DisplayMetrics
 import android.util.Log
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Text
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.*
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.algo.GridBasedAlgorithm
+import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm
 import com.google.maps.android.clustering.algo.NonHierarchicalViewBasedAlgorithm
 import com.google.maps.android.compose.*
 import com.mendelu.xstast12.homework2.map.CustomMapRenderer
@@ -24,6 +28,7 @@ import com.mendelu.xstast12.homework2.model.Store
 import com.mendelu.xstast12.homework2.navigation.INavigationRouter
 import com.mendelu.xstast12.homework2.ui.elements.ErrorScreen
 import com.mendelu.xstast12.homework2.ui.elements.LoadingScreen
+import com.mendelu.xstast12.homework2.ui.elements.MapCard
 import org.koin.androidx.compose.getViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -90,14 +95,13 @@ fun MapScreenContent(brno: Brno) {
     val context = LocalContext.current
     var clusterRenderer by remember { mutableStateOf<CustomMapRenderer?>(null)}
     var currentMarker by remember { mutableStateOf<Marker?>(null)}
-    val displayMetrics = DisplayMetrics()
 
     if (brno.stores!!.isNotEmpty()){
         clusterManager?.addItems(brno.stores)
         clusterManager?.cluster()
     }
 
-    Box(modifier = Modifier.fillMaxSize()){
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter){
         GoogleMap(uiSettings = mapUiSettings,
             cameraPositionState = cameraPositionState
         ){
@@ -106,8 +110,7 @@ fun MapScreenContent(brno: Brno) {
                 map.addPolygon(
                     PolygonOptions()
                     .addAll(brno.boundaries.allCoordinates!!).strokeWidth(5f))
-
-
+                
                 if ( clusterManager == null){
                     clusterManager = ClusterManager<Store>(context, map)
                 }
@@ -118,25 +121,35 @@ fun MapScreenContent(brno: Brno) {
 
                 clusterManager?.apply {
                     renderer = clusterRenderer
-                    //algorithm = GridBasedAlgorithm()
-                    algorithm = NonHierarchicalViewBasedAlgorithm(
-                        500, 1500)
-                }
+                   // algorithm = GridBasedAlgorithm()
+                    algorithm = NonHierarchicalDistanceBasedAlgorithm()
 
+                    renderer.setOnClusterItemClickListener { item ->
+                        if (currentMarker != null){
+                            currentMarker = null
+                        }
+
+                        map.animateCamera(
+                            CameraUpdateFactory
+                                .newLatLngZoom(LatLng(item!!.latitude, item.longitude), 16f)
+                        )
+
+                        currentMarker = clusterRenderer?.getMarker(item)
+                        true
+                    }
+                }
+                
                 map.setOnCameraIdleListener {
                     clusterManager?.cluster()
                 }
-
-
-
             }
 
-
-
-
-
         }
+        
+        if (currentMarker != null){
+            MapCard(marker = currentMarker!!)
+        }
+
     }
-
-
 }
+

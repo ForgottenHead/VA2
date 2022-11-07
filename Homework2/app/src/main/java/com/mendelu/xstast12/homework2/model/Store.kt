@@ -21,6 +21,10 @@ class Store(
     }
 
     override fun getSnippet(): String? {
-        return name
+        return address
+    }
+
+    fun getRandom(): String{
+        return type
     }
 }

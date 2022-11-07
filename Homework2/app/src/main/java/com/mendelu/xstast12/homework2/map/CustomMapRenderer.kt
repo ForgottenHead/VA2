@@ -8,6 +8,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.view.DefaultClusterRenderer
+import com.mendelu.xstast12.homework2.R
 import com.mendelu.xstast12.homework2.model.Brno
 import com.mendelu.xstast12.homework2.model.Store
 
@@ -26,21 +27,22 @@ class CustomMapRenderer(val context: Context,
 
     override fun onBeforeClusterItemRendered(item: Store, markerOptions: MarkerOptions) {
         super.onBeforeClusterItemRendered(item, markerOptions)
-//        if (!icons.containsKey(item.animalClass)){
-//            if (item.animalClass == "Savci (Mammalia)"){
-//                icons[item.animalClass] =
-//                    MarkerUtil.createMarkerIconFromResource(context, R.drawable.mammal_marker)
-//            }else if (item.animalClass == "Plazi (Reptilia)"){
-//                icons[item.animalClass] =
-//                    MarkerUtil.createMarkerIconFromResource(context, R.drawable.reptile_marker)
-//            }else{
-//                icons[item.animalClass] =
-//                    MarkerUtil.createMarkerIconFromResource(context, R.drawable.fish_marker)
-//            }
-//
-//        }
+        if (!icons.containsKey(item.type)){
+            when(item.type){
+                "clothes" -> {icons[item.type] =
+                    MarkerUtil.createMarkerIconFromResource(context, R.drawable.ic_clothes)}
+                "electronics" -> {icons[item.type] =
+                    MarkerUtil.createMarkerIconFromResource(context, R.drawable.ic_electronics)}
+                "fast_food"-> {icons[item.type] =
+                    MarkerUtil.createMarkerIconFromResource(context, R.drawable.ic_fast_food)}
+                "food" -> {icons[item.type] =
+                    MarkerUtil.createMarkerIconFromResource(context, R.drawable.ic_food)}
+                "kids" -> {icons[item.type] =
+                    MarkerUtil.createMarkerIconFromResource(context, R.drawable.ic_kids)}
+            }
+        }
 
-       // markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icons[item.animalClass]!!))
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icons[item.type]!!))
     }
 
 
